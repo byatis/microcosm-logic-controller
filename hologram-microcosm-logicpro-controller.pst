@@ -1,0 +1,222 @@
+// Hologram Microcosm controller for Logic Pro
+// version 1.0
+// Made by Syndrive // https://www.youtube.com/@syndrive
+// Released under Creative Commons license: 
+// https://creativecommons.org/licenses/by/4.0/
+
+
+function HandleMIDI(e) {
+	e.send();
+	e.trace();
+}
+
+function ParameterChanged(param, value) {
+	var curParam = PluginParameters[param];
+	if (curParam.cctype == 'pc') {
+	 var pc = new ProgramChange;       
+            pc.number = value;     
+            pc.send();
+            pc.trace(); 
+	} else {
+	var cc = new ControlChange();
+	cc.number = curParam.cc;
+	if (curParam.actualValues) {
+		cc.value = curParam.actualValues[curParam.valueStrings[value]];
+	} else {
+		cc.value = value;
+	}
+	cc.send(), cc.trace();
+	}
+}
+
+var PluginParameters = [];
+
+
+	PluginParameters.push(
+	{
+		name: ("Filter>Cutoff"),
+		type: "lin",
+		defaultValue: 0,
+		numberOfSteps: 127,
+		minValue: 0,
+		maxValue: 127,
+		cc: 8
+		
+	}, 
+		{
+		name: ("Filter>Resonance"),
+		type: "lin",
+		defaultValue: 0,
+		numberOfSteps: 127,
+		minValue: 0,
+		maxValue: 127,
+		cc: 15
+		
+	},
+		{
+		name: ("Time"),
+		type: "lin",
+		defaultValue: 0,
+		numberOfSteps: 127,
+		minValue: 0,
+		maxValue: 127,
+		cc: 10
+		
+	},
+	{
+		name: ("Subdivision"),
+		type: "menu",
+		valueStrings: ["1/4","1/2","TAP","2x","4x","8x"],
+		cc: 5,
+		actualValues: {
+			"1/4": 0,
+			"1/2": 1,
+			"TAP": 2,
+			"2x": 3,		
+			"4x": 4,
+			"8x": 5
+			}
+		
+	},
+	
+	{
+		name: ("Bypass"),
+		type: "menu",
+		valueStrings: ["Off","On"],
+		defaultValue: "Off",
+		cc: 102,
+		actualValues: {
+			"Off": 127,
+			"On": 0
+			}
+		
+	},
+	{
+		name: ("Activity"),
+		type: "lin",
+		defaultValue: 0,
+		numberOfSteps: 127,
+		minValue: 0,
+		maxValue: 127,
+		cc: 6
+		
+	},
+	{
+		name: ("Repeats"),
+		type: "lin",
+		defaultValue: 0,
+		numberOfSteps: 127,
+		minValue: 0,
+		maxValue: 127,
+		cc: 11
+		
+	},
+	{
+		name: ("Mod>Shape"),
+		type: "menu",
+		valueStrings: ["Square","Ramp","Triangle","Saw"],
+		cc: 5,
+		actualValues: {
+			"Square": 0,
+			"Ramp": 32,
+			"Triangle": 64,
+			"Saw": 96		
+			},
+		cc: 7
+		
+	},
+	{
+		name: ("Mod>Frequency"),
+		type: "lin",
+		defaultValue: 0,
+		numberOfSteps: 127,
+		minValue: 0,
+		maxValue: 127,
+		cc: 14
+		
+	},
+	{
+		name: ("Mod>Depth"),
+		type: "lin",
+		defaultValue: 0,
+		numberOfSteps: 127,
+		minValue: 0,
+		maxValue: 127,
+		cc: 19
+		
+	},
+	{
+		name: ("Rev>Space"),
+		type: "lin",
+		defaultValue: 0,
+		numberOfSteps: 127,
+		minValue: 0,
+		maxValue: 127,
+		cc: 12
+		
+	},
+		{
+		name: ("Rev>Time"),
+		type: "lin",
+		defaultValue: 0,
+		numberOfSteps: 127,
+		minValue: 0,
+		maxValue: 127,
+		cc: 12
+		
+	},
+	{
+		name: ("Hold sampler"),
+		type: "menu",
+		valueStrings: ["Off","On"],
+		defaultValue: "Off",
+		cc: 48,
+		actualValues: {
+			"Off": 0,
+			"On": 127
+			}
+		
+	},
+	{
+		name: ("Mix"),
+		type: "lin",
+		defaultValue: 0,
+		numberOfSteps: 127,
+		minValue: 0,
+		maxValue: 127,
+		cc: 9
+		
+	},
+	{
+		name: ("Volume"),
+		type: "lin",
+		defaultValue: 0,
+		numberOfSteps: 127,
+		minValue: 0,
+		maxValue: 127,
+		cc: 16 
+		
+	},
+		{
+		name: ("Reverse Effect"),
+		type: "lin",
+		defaultValue: 0,
+		numberOfSteps: 127,
+		minValue: 0,
+		maxValue: 127,
+		cc: 47
+		
+	},
+			{
+		name: ("Program Change"),
+		type: "lin",
+		defaultValue: 1,
+		numberOfSteps: 59,
+		minValue: 1,
+		maxValue: 60,
+		cctype: 'pc'
+		
+	},
+	
+	);
+
